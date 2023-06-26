@@ -73,5 +73,5 @@ public class GridMovement : MonoBehaviour
 
         isMoving = true; // Запуск перемещения
     }
-
+   
 }
