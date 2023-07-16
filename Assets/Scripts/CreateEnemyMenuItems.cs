@@ -7,12 +7,10 @@ public class CreateEnemyMenuItems : MonoBehaviour
     private GameObject targetEnemyUnitPrefab;
 
     private GameObject enemyUnitsMenu;
-    private GameObject[] activeTargetEnemies;
 
     private void Start()
     {
         enemyUnitsMenu = GameObject.Find("EnemyUnitsMenu");
-        activeTargetEnemies = new GameObject[0];
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -25,7 +23,7 @@ public class CreateEnemyMenuItems : MonoBehaviour
             targetEnemyUnit.GetComponent<Button>().onClick.AddListener(() => SelectEnemyTarget(other.gameObject));
             targetEnemyUnit.GetComponent<Image>().sprite = enemySpriteRenderer.sprite;
 
-            Debug.Log("Player entered enemy collider");
+            Debug.Log("Игрок вошел в триггер врага");
         }
     }
 
@@ -34,21 +32,26 @@ public class CreateEnemyMenuItems : MonoBehaviour
         if (other.CompareTag("Enemy"))
         {
             RemoveActiveTargetEnemies();
-            Debug.Log("Player exited enemy collider");
+            Debug.Log("Игрок вышел из триггера врага");
         }
     }
 
     private void RemoveActiveTargetEnemies()
     {
-        foreach (GameObject targetEnemy in activeTargetEnemies)
+        Transform enemyUnitsTransform = enemyUnitsMenu.transform;
+        int childCount = enemyUnitsTransform.childCount;
+        for (int i = childCount - 1; i >= 0; i--)
         {
-            Destroy(targetEnemy);
+            Transform child = enemyUnitsTransform.GetChild(i);
+            if (child.name == "TargetEnemy(Clone)")
+            {
+                Destroy(child.gameObject);
+            }
         }
-        activeTargetEnemies = new GameObject[0];
     }
 
     public void SelectEnemyTarget(GameObject enemy)
     {
-        Debug.Log("Selected Enemy: " + enemy.name);
+        Debug.Log("Выбран враг: " + enemy.name);
     }
 }
