@@ -1,17 +1,16 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 public class CreateEnemyMenuItems : MonoBehaviour
 {
     [SerializeField]
     private GameObject targetEnemyUnitPrefab;
 
+    [SerializeField]
     private GameObject enemyUnitsMenu;
 
-    private void Start()
-    {
-        enemyUnitsMenu = GameObject.Find("EnemyUnitsMenu");
-    }
+    private Dictionary<GameObject, GameObject> activeTargetEnemies = new Dictionary<GameObject, GameObject>();
 
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -23,6 +22,8 @@ public class CreateEnemyMenuItems : MonoBehaviour
             targetEnemyUnit.GetComponent<Button>().onClick.AddListener(() => SelectEnemyTarget(other.gameObject));
             targetEnemyUnit.GetComponent<Image>().sprite = enemySpriteRenderer.sprite;
 
+            activeTargetEnemies.Add(other.gameObject, targetEnemyUnit);
+
             Debug.Log("Игрок вошел в триггер врага");
         }
     }
@@ -31,22 +32,18 @@ public class CreateEnemyMenuItems : MonoBehaviour
     {
         if (other.CompareTag("Enemy"))
         {
-            RemoveActiveTargetEnemies();
+            RemoveActiveTargetEnemy(other.gameObject);
             Debug.Log("Игрок вышел из триггера врага");
         }
     }
 
-    private void RemoveActiveTargetEnemies()
+    private void RemoveActiveTargetEnemy(GameObject enemy)
     {
-        Transform enemyUnitsTransform = enemyUnitsMenu.transform;
-        int childCount = enemyUnitsTransform.childCount;
-        for (int i = childCount - 1; i >= 0; i--)
+        if (activeTargetEnemies.ContainsKey(enemy))
         {
-            Transform child = enemyUnitsTransform.GetChild(i);
-            if (child.name == "TargetEnemy(Clone)")
-            {
-                Destroy(child.gameObject);
-            }
+            GameObject targetEnemyUnit = activeTargetEnemies[enemy];
+            Destroy(targetEnemyUnit);
+            activeTargetEnemies.Remove(enemy);
         }
     }
 
