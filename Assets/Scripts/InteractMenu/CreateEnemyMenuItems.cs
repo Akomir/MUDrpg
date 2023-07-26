@@ -10,6 +10,9 @@ public class CreateEnemyMenuItems : MonoBehaviour
     [SerializeField]
     private GameObject enemyUnitsMenu;
 
+    [SerializeField]
+    private SpawnManager spawnManager; // Ссылка на скрипт SpawnManager, который управляет спавном противников
+
     private Dictionary<GameObject, GameObject> activeTargetEnemies = new Dictionary<GameObject, GameObject>();
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -50,5 +53,9 @@ public class CreateEnemyMenuItems : MonoBehaviour
     public void SelectEnemyTarget(GameObject enemy)
     {
         Debug.Log("Выбран враг: " + enemy.name);
+
+        // Вызываем метод спавна противников из скрипта SpawnManager
+        // Передаем в качестве префаба выбранного врага enemy
+        spawnManager.SpawnUnitsAtPosition(enemy.transform.position, enemy);
     }
 }

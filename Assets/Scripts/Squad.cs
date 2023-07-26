@@ -17,7 +17,7 @@ public class Squad : MonoBehaviour
     }
 
     [SerializeField]
-    private List<WarUnitData> warUnits = new List<WarUnitData>(); // Список данных о WarUnit
+    public List<WarUnitData> warUnits = new List<WarUnitData>(); // Список данных о WarUnit
 
     private void Start()
     {
@@ -29,11 +29,9 @@ public class Squad : MonoBehaviour
 
         // Делаем текущий объект дочерним объектом родительского объекта
         transform.SetParent(parentObject.transform);
-
-        SpawnWarUnits();
     }
 
-    private void SpawnWarUnits()
+    public void SpawnWarUnits(Vector2 spawnPosition)
     {
         foreach (var unitData in warUnits)
         {
@@ -43,7 +41,7 @@ public class Squad : MonoBehaviour
 
             for (int i = 0; i < count; i++)
             {
-                Instantiate(unitData.warUnitPrefab, transform.position, Quaternion.identity);
+                Instantiate(unitData.warUnitPrefab, spawnPosition, Quaternion.identity);
             }
         }
     }
